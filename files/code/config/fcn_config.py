@@ -109,8 +109,6 @@ CLASS_NAMES = ("Urban",
 BATCH_SIZE = 32
 EPOCHS = 200
 
-this.visualize_legend()
-
 #######################################################################################################
 
 # colors for segmented classes
