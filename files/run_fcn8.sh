@@ -282,44 +282,6 @@ main() {
     # create the proper folders and images from the original dataset
     1_generate_images 2>&1 | tee ${LOG_DIR}/${CNN}/${PREPARE_DATA_LOG}
 
-    # do the training and make predictions
-    2_fcn8_train     2>&1 | tee ${LOG_DIR}/${CNN}/${TRAIN_LOG}
-
-    # from Keras to TF
-    3_fcn8_Keras2TF  2>&1 | tee ${LOG_DIR}/${CNN}/fcn8_keras2tf.log
-
-    # freeze the graph and inspect it
-    4a_fcn8_freeze   2>&1 | tee ${LOG_DIR}/${CNN}/${FREEZE_LOG}
-
-    # evaluate the frozen graph performance
-    4b_eval_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_FR_LOG}
-
-    # quantize 
-    5a_fcn8_quantize 2>&1 | tee ${LOG_DIR}/${CNN}/${QUANT_LOG}
-
-    # evaluate post-quantization model
-    5b_eval_quantized_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_Q_LOG}
-
-    # compile with dnnc to generate elf file for ZCU102
-    6_compile_vai 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}
-    # move elf and so files to target ZCU102 board directory
-    mv  ${COMPILE_DIR}/${CNN}/dpu*.elf    ${TARGET_DIR}/${CNN}/model/
-
-    # compile with dnnc to generate elf file for ZCU104
-    6_compile_vai_zcu104 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}_zcu104
-    # move elf and so files to target ZCU104 board directory
-    mv  ${COMPILE_DIR}/${CNN}/dpu*.elf  ${TARGET_DIR4}/${CNN}/model/
-
-    # copy test images into target board
-    tar -cvf "test.tar" ${DATASET_DIR}/img_test ${DATASET_DIR}/seg_test
-    gzip test.tar
-    cp test.tar.gz ${TARGET_DIR}/
-    mv test.tar.gz ${TARGET_DIR4}/
-
-
-    echo "#####################################"
-    echo "MAIN FCN8 FLOW COMPLETED"
-    echo "#####################################"
 
 
 }
