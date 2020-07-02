@@ -92,8 +92,7 @@ WIDTH  = 2448
 HEIGHT = 2448
 
 #normalization factor
-NORM_FACTOR = 1224l
-
+NORM_FACTOR = 1224
 #number of classes
 NUM_CLASSES = 7
 
