@@ -88,28 +88,23 @@ TB_LOG_DIR = os.path.join(SCRIPT_DIR, "../workspace/tb_logs")
 ###############################################################################
 
 #Size of images
-WIDTH  = 224
-HEIGHT = 224
+WIDTH  = 2448
+HEIGHT = 2448
 
 #normalization factor
 NORM_FACTOR = 127.5
 
 #number of classes
-NUM_CLASSES = 12
+NUM_CLASSES = 7
 
 # names of classes
-CLASS_NAMES = ("Sky",
-               "Wall",
-               "Pole",
-               "Road",
-               "Sidewalk",
-               "Vegetation",
-               "Sign",
-               "Fence",
-               "vehicle",
-               "Pedestrian",
-               "Bicyclist",
-               "miscellanea")
+CLASS_NAMES = ("Urban",
+               "Agricultural",
+               "Rangeland",
+               "Forest land",
+               "Water",
+               "Barren",
+               "Unknown")
 
 BATCH_SIZE = 32
 EPOCHS = 200

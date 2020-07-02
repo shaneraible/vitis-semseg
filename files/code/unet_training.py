@@ -37,7 +37,7 @@ from datetime import datetime #DB
 from keras.utils import plot_model #DB
 from keras.preprocessing.image import ImageDataGenerator #DB
 import gc #DB
-from config import fcn_config as cfg
+from config import fcn_config as cfgbb
 from config import fcn8_cnn as cnn
 from sklearn.utils import shuffle
 from config import fcn_config as cfg #DB
