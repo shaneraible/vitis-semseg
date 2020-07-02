@@ -45,7 +45,7 @@ SCRIPT_DIR = get_script_directory()
 print("fcn_config.py runs from ", SCRIPT_DIR)
 
 # dataset top level folder
-DATASET_DIR = os.path.join(SCRIPT_DIR, "../files/dataset1")
+DATASET_DIR = os.path.join(SCRIPT_DIR, "../dataset1")
 # train, validation, test and calibration folders
 SEG_TRAIN_DIR = os.path.join(DATASET_DIR, "annotations_prepped_train")
 IMG_TRAIN_DIR = os.path.join(DATASET_DIR, "images_prepped_train")
