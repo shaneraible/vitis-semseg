@@ -74,6 +74,7 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
     echo " "
     # clean files in pre-built sub-directories
     rm -f ${DATASET_DIR}/img_*/* ${DATASET_DIR}/seg_*/*
+
     # unzip the original dataset
     unzip ${WORK_DIR}/../dataset1.zip -d ${WORK_DIR}
     cd code
@@ -95,8 +96,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
     echo "##################################################################################"
     echo " "
     python unet_training.py -m 1
-    python unet_training.py -m 2
-    python unet_training.py -m 3
     echo " "
 
     cd ../code
@@ -105,8 +104,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
     echo "##################################################################################"
     echo " "
     python unet_make_predictions.py -m 1
-    python unet_make_predictions.py -m 2
-    python unet_make_predictions.py -m 3
     cd ..
 
 }
@@ -124,8 +121,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
     # from Keras to TF
     cd code
     python Keras2TF.py --model  "unet1"
-    python Keras2TF.py --model  "unet2"
-    python Keras2TF.py --model  "unet3"
     cd ..
 }
 
@@ -147,22 +142,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
 	--output_graph      ${FREEZE_DIR}/${CNN}1/${FROZEN_GRAPH_FILENAME} \
 	--output_node_names ${OUTPUT_NODE}
 
-    # freeze the TF graph
-    freeze_graph \
-	--input_graph       ${CHKPT_DIR}/${CNN}2/${INFER_GRAPH_FILENAME} \
-	--input_checkpoint  ${CHKPT_DIR}/${CNN}2/${CHKPT_FILENAME} \
-	--input_binary      true \
-	--output_graph      ${FREEZE_DIR}/${CNN}2/${FROZEN_GRAPH_FILENAME} \
-	--output_node_names "conv2d_23/Relu"
-
-    # freeze the TF graph
-    freeze_graph \
-	--input_graph       ${CHKPT_DIR}/${CNN}3/${INFER_GRAPH_FILENAME} \
-	--input_checkpoint  ${CHKPT_DIR}/${CNN}3/${CHKPT_FILENAME} \
-	--input_binary      true \
-	--output_graph      ${FREEZE_DIR}/${CNN}3/${FROZEN_GRAPH_FILENAME} \
-	--output_node_names ${OUTPUT_NODE}
-
 
     echo " "
     echo "##############################################################################"
@@ -170,8 +149,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
     echo "##############################################################################"
     echo " "
     vai_q_tensorflow inspect --input_frozen_graph ${FREEZE_DIR}/${CNN}1/${FROZEN_GRAPH_FILENAME}
-    vai_q_tensorflow inspect --input_frozen_graph ${FREEZE_DIR}/${CNN}2/${FROZEN_GRAPH_FILENAME}
-    vai_q_tensorflow inspect --input_frozen_graph ${FREEZE_DIR}/${CNN}3/${FROZEN_GRAPH_FILENAME}
 }
 
 
@@ -190,17 +167,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
 	   --output_node=${OUTPUT_NODE} \
 	   --gpu=0
 
-    python eval_graph.py \
-	   --graph=../${FREEZE_DIR}/${CNN}2/${FROZEN_GRAPH_FILENAME} \
-	   --input_node=${INPUT_NODE} \
-	   --output_node="conv2d_23/Relu" \
-	   --gpu=0
-
-    python eval_graph.py \
-	   --graph=../${FREEZE_DIR}/${CNN}3/${FROZEN_GRAPH_FILENAME} \
-	   --input_node=${INPUT_NODE} \
-	   --output_node=${OUTPUT_NODE} \
-	   --gpu=0
     cd ..
 }
 
@@ -220,28 +186,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
 	 --input_shapes        ?,224,224,3 \
 	 --output_nodes        ${OUTPUT_NODE} \
 	 --output_dir          ../${QUANT_DIR}/${CNN}1/ \
-	 --method              1 \
-	 --input_fn            graph_input_fn.calib_input \
-	 --calib_iter          10 \
-	 --gpu 0
-
-   vai_q_tensorflow quantize \
-	 --input_frozen_graph  ../${FREEZE_DIR}/${CNN}2/${FROZEN_GRAPH_FILENAME} \
-	 --input_nodes         ${INPUT_NODE} \
-	 --input_shapes        ?,224,224,3 \
-	 --output_nodes        "conv2d_23/Relu" \
-	 --output_dir          ../${QUANT_DIR}/${CNN}2/ \
-	 --method              1 \
-	 --input_fn            graph_input_fn.calib_input \
-	 --calib_iter          10 \
-	 --gpu 0
-
-   vai_q_tensorflow quantize \
-	 --input_frozen_graph  ../${FREEZE_DIR}/${CNN}1/${FROZEN_GRAPH_FILENAME} \
-	 --input_nodes         ${INPUT_NODE} \
-	 --input_shapes        ?,224,224,3 \
-	 --output_nodes        ${OUTPUT_NODE} \
-	 --output_dir          ../${QUANT_DIR}/${CNN}3/ \
 	 --method              1 \
 	 --input_fn            graph_input_fn.calib_input \
 	 --calib_iter          10 \
@@ -268,18 +212,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
 	   --output_node=${OUTPUT_NODE} \
 	   --gpu=0
 
-    python eval_quantized_graph.py \
-	   --graph=../${QUANT_DIR}/${CNN}2/${QUANTIZED_FILENAME} \
-	   --input_node=${INPUT_NODE} \
-	   --output_node="conv2d_23/Relu" \
-	   --gpu=0
-
-    python eval_quantized_graph.py \
-	   --graph=../${QUANT_DIR}/${CNN}3/${QUANTIZED_FILENAME} \
-	   --input_node=${INPUT_NODE} \
-	   --output_node=${OUTPUT_NODE} \
-	   --gpu=0
-
     cd ..
 }
 
@@ -299,19 +231,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
 	 --options    "{'mode':'normal'}" \
 	 --net_name ${CNN}1
 
-  python /opt/vitis_ai/compiler/vai_c_tensorflow \
-	 --frozen_pb ${QUANT_DIR}/${CNN}2/deploy_model.pb \
-	 --arch /opt/vitis_ai/compiler/arch/dpuv2/ZCU102/ZCU102.json \
-	 --output_dir ${COMPILE_DIR}/${CNN}2 \
-	 --options    "{'mode':'normal'}" \
-	 --net_name ${CNN}2
-
-  python /opt/vitis_ai/compiler/vai_c_tensorflow \
-	 --frozen_pb ${QUANT_DIR}/${CNN}3/deploy_model.pb \
-	 --arch /opt/vitis_ai/compiler/arch/dpuv2/ZCU102/ZCU102.json \
-	 --output_dir ${COMPILE_DIR}/${CNN}3 \
-	 --options    "{'mode':'normal'}" \
-	 --net_name ${CNN}3
  }
 
 ##################################################################################
@@ -329,19 +248,6 @@ OUTPUT_NODE="conv2d_19/Relu" # output node of floating point CNN UNET v1 and v3
  	 --options    "{'mode':'normal'}" \
  	 --net_name ${CNN}1
 
-   python /opt/vitis_ai/compiler/vai_c_tensorflow \
- 	 --frozen_pb ${QUANT_DIR}/${CNN}2/deploy_model.pb \
- 	 --arch /opt/vitis_ai/compiler/arch/dpuv2/ZCU104/ZCU104.json \
- 	 --output_dir ${COMPILE_DIR}/${CNN}2 \
- 	 --options    "{'mode':'normal'}" \
- 	 --net_name ${CNN}2
-
-   python /opt/vitis_ai/compiler/vai_c_tensorflow \
- 	 --frozen_pb ${QUANT_DIR}/${CNN}3/deploy_model.pb \
- 	 --arch /opt/vitis_ai/compiler/arch/dpuv2/ZCU104/ZCU104.json \
- 	 --output_dir ${COMPILE_DIR}/${CNN}3 \
- 	 --options    "{'mode':'normal'}" \
- 	 --net_name ${CNN}3
 }
 
 
@@ -354,7 +260,7 @@ main() {
 
   # assuming you have run first the run_fcn8.sh script, you do not need to clean up anything
 
-: '
+: 
     # clean up previous results
     rm -rf ${WORK_DIR}; mkdir ${WORK_DIR}
     rm -rf ${LOG_DIR}; mkdir ${LOG_DIR}
@@ -366,7 +272,7 @@ main() {
     rm -rf ${FREEZE_DIR}; mkdir ${FREEZE_DIR}
     rm -rf ${QUANT_DIR}; mkdir ${QUANT_DIR}
     rm -rf ${COMPILE_DIR}; mkdir ${COMPILE_DIR}
-'
+
     mkdir ${LOG_DIR}/${CNN}
     mkdir ${CHKPT_DIR}/${CNN}1   ${CHKPT_DIR}/${CNN}2   ${CHKPT_DIR}/${CNN}3
     mkdir ${FREEZE_DIR}/${CNN}1  ${FREEZE_DIR}/${CNN}2  ${FREEZE_DIR}/${CNN}3
@@ -380,7 +286,7 @@ main() {
 '
 
     ## create the proper folders and images from the original dataset
-    #1_generate_images 2>&1 | tee ${LOG_DIR}/${CNN}/${PREPARE_DATA_LOG}
+    1_generate_images 2>&1 | tee ${LOG_DIR}/${CNN}/${PREPARE_DATA_LOG}
 
     # do the training and make predictions
     2_unet_train     2>&1 | tee ${LOG_DIR}/${CNN}/${TRAIN_LOG}
