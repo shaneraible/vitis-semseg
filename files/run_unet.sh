@@ -380,7 +380,7 @@ main() {
 '
 
     ## create the proper folders and images from the original dataset
-    1_generate_images 2>&1 | tee ${LOG_DIR}/${CNN}/${PREPARE_DATA_LOG}
+    #1_generate_images 2>&1 | tee ${LOG_DIR}/${CNN}/${PREPARE_DATA_LOG}
 
     # do the training and make predictions
     2_unet_train     2>&1 | tee ${LOG_DIR}/${CNN}/${TRAIN_LOG}
