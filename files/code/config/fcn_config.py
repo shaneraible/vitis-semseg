@@ -45,7 +45,7 @@ SCRIPT_DIR = get_script_directory()
 print("fcn_config.py runs from ", SCRIPT_DIR)
 
 # dataset top level folder
-DATASET_DIR = os.path.join(SCRIPT_DIR, "../dataset1")
+DATASET_DIR = os.path.join(SCRIPT_DIR, "../workspace/dataset1")
 # train, validation, test and calibration folders
 SEG_TRAIN_DIR = os.path.join(DATASET_DIR, "annotations_prepped_train")
 IMG_TRAIN_DIR = os.path.join(DATASET_DIR, "images_prepped_train")
@@ -92,7 +92,7 @@ WIDTH  = 2448
 HEIGHT = 2448
 
 #normalization factor
-NORM_FACTOR = 127.5
+NORM_FACTOR = 1224l
 
 #number of classes
 NUM_CLASSES = 7
