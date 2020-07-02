@@ -109,7 +109,7 @@ CLASS_NAMES = ("Urban",
 BATCH_SIZE = 32
 EPOCHS = 200
 
-visualize_legend()
+this.visualize_legend()
 
 #######################################################################################################
 
