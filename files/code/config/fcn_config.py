@@ -115,7 +115,7 @@ colorB = [ 255, 000, 255, 000, 255, 255, 000 ]
 colorG = [ 255, 255, 000, 255, 000, 255, 000 ]
 colorR = [ 000, 255, 255, 000, 000, 255, 000 ]
 CLASS_COLOR = list()
-for i in range(0, 19):
+for i in range(0, 7):
     CLASS_COLOR.append([colorR[i], colorG[i], colorB[i]])
 COLORS = np.array(CLASS_COLOR, dtype="float32")
 
