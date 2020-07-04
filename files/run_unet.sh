@@ -291,34 +291,34 @@ main() {
     # do the training and make predictions
     2_unet_train     2>&1 | tee ${LOG_DIR}/${CNN}/${TRAIN_LOG}
 
-    # from Keras to TF
-    3_fcn8_Keras2TF  2>&1 | tee ${LOG_DIR}/${CNN}/unet_keras2tf.log
+    # # from Keras to TF
+    # 3_fcn8_Keras2TF  2>&1 | tee ${LOG_DIR}/${CNN}/unet_keras2tf.log
 
-    # freeze the graph and inspect it
-    4a_fcn8_freeze   2>&1 | tee ${LOG_DIR}/${CNN}/${FREEZE_LOG}
+    # # freeze the graph and inspect it
+    # 4a_fcn8_freeze   2>&1 | tee ${LOG_DIR}/${CNN}/${FREEZE_LOG}
 
-    # evaluate the frozen graph performance
-    4b_eval_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_FR_LOG}
+    # # evaluate the frozen graph performance
+    # 4b_eval_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_FR_LOG}
 
-    # quantize
-    5a_unet_quantize 2>&1 | tee ${LOG_DIR}/${CNN}/${QUANT_LOG}
+    # # quantize
+    # 5a_unet_quantize 2>&1 | tee ${LOG_DIR}/${CNN}/${QUANT_LOG}
 
-    # evaluate post-quantization model
-    5b_eval_quantized_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_Q_LOG}
+    # # evaluate post-quantization model
+    # 5b_eval_quantized_graph 2>&1 | tee ${LOG_DIR}/${CNN}/${EVAL_Q_LOG}
 
-    # compile with Vitis AI to generate elf file for ZCU102
-    6_compile_vai 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}
-    # move elf and so files to  ZCU102 board directory
-    #mv  ${COMPILE_DIR}/${CNN}1/dpu*.elf    ${TARGET_DIR}/v1/model/
-    mv  ${COMPILE_DIR}/${CNN}2/dpu*.elf    ${TARGET_DIR}/v2/model/
-    #mv  ${COMPILE_DIR}/${CNN}3/dpu*.elf    ${TARGET_DIR}/v3/model/
+    # # compile with Vitis AI to generate elf file for ZCU102
+    # 6_compile_vai 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}
+    # # move elf and so files to  ZCU102 board directory
+    # #mv  ${COMPILE_DIR}/${CNN}1/dpu*.elf    ${TARGET_DIR}/v1/model/
+    # mv  ${COMPILE_DIR}/${CNN}2/dpu*.elf    ${TARGET_DIR}/v2/model/
+    # #mv  ${COMPILE_DIR}/${CNN}3/dpu*.elf    ${TARGET_DIR}/v3/model/
 
-    # compile with Vitis AI to generate elf file for ZCU104
-    6_compile_vai_zcu104 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}_zcu104
-    # move elf and so files to target board directory
-    #mv  ${COMPILE_DIR}/${CNN}1/dpu*.elf    ${TARGET_DIR4}/v1/model/
-    mv  ${COMPILE_DIR}/${CNN}2/dpu*.elf    ${TARGET_DIR4}/v2/model/
-    #mv  ${COMPILE_DIR}/${CNN}3/dpu*.elf    ${TARGET_DIR4}/v3/model/
+    # # compile with Vitis AI to generate elf file for ZCU104
+    # 6_compile_vai_zcu104 2>&1 | tee ${LOG_DIR}/${CNN}/${COMP_LOG}_zcu104
+    # # move elf and so files to target board directory
+    # #mv  ${COMPILE_DIR}/${CNN}1/dpu*.elf    ${TARGET_DIR4}/v1/model/
+    # mv  ${COMPILE_DIR}/${CNN}2/dpu*.elf    ${TARGET_DIR4}/v2/model/
+    # #mv  ${COMPILE_DIR}/${CNN}3/dpu*.elf    ${TARGET_DIR4}/v3/model/
 
 
     echo "#####################################"
