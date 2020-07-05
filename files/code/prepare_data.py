@@ -47,7 +47,7 @@ warnings.filterwarnings("ignore")
 
 ######################################################################
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.85
 #config.gpu_options.allow_growth = True
 config.gpu_options.visible_device_list = "0"
@@ -100,7 +100,7 @@ cnn.plot_some_images(dir_train_seg_inp, dir_train_img_inp)
 ######################################################################
 # Resize all the images to 224x224 and store in proper folders
 ######################################################################
-
+print("resize all images to 224x224")
 train_images = os.listdir(dir_train_img_inp)
 train_images.sort()
 train_segmentations  = os.listdir(dir_train_seg_inp)
