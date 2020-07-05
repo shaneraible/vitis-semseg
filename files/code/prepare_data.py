@@ -117,7 +117,7 @@ shuffle(list_mapped)
 
 X = []
 Y = []
-for i in range(len(list_mapped)):
+for i in range(len(list_mapped)/4):
     X.append( cnn.getImageArr(        os.path.join(dir_train_img_inp, list_mapped[i][0]) , input_width , input_height )  )
     Y.append( cnn.getSegmentationArr( os.path.join(dir_train_seg_inp, list_mapped[i][1]), n_classes , output_width , output_height )  )
 X, Y = np.array(X) , np.array(Y)
